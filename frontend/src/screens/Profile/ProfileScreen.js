@@ -10,6 +10,8 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useVideoPlayer, VideoView } from 'expo-video';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, FONT_SIZES, FONT_WEIGHTS, BORDER_RADIUS } from '../../theme/theme';
 import { useAuth } from '../../context/AuthContext';
@@ -20,16 +22,49 @@ const GRID_GAP = 1;
 const NUM_COLUMNS = 3;
 const TILE_SIZE = (SCREEN_WIDTH - GRID_GAP * (NUM_COLUMNS - 1)) / NUM_COLUMNS;
 
-const ProfileScreen = () => {
+const ProfileGridItem = ({ item }) => {
+  const player = useVideoPlayer(
+    item.mediaType === 'video' ? item.mediaUrl : null,
+    (player) => {
+      player.loop = true;
+      player.muted = true;
+    }
+  );
+  return (
+    <TouchableOpacity style={styles.gridTile} activeOpacity={0.8}>
+      {item.mediaType === 'video' ? (
+        <VideoView player={player} style={styles.gridImage} contentFit="cover" />
+      ) : (
+        <Image source={{ uri: item.mediaUrl }} style={styles.gridImage} resizeMode="cover" />
+      )}
+      <View style={styles.gridOverlay}>
+        <View style={styles.gridStat}>
+          <Ionicons name="heart" size={12} color={COLORS.white} />
+          <Text style={styles.gridStatText}>{item.likesCount}</Text>
+        </View>
+        <View style={styles.gridStat}>
+          <Ionicons name="chatbubble" size={12} color={COLORS.white} />
+          <Text style={styles.gridStatText}>{item.commentsCount}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const ProfileScreen = ({ route, navigation }) => {
   const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState('grid');
   const { user, logout } = useAuth();
+  
+  const targetUserId = route.params?.userId;
+  const isOwnProfile = !targetUserId || targetUserId === user.id;
 
   const fetchProfile = useCallback(async () => {
     try {
-      const response = await api.get('/users/me');
+      const endpoint = isOwnProfile ? '/users/me' : `/users/${targetUserId}`;
+      const response = await api.get(endpoint);
       if (response.data.success) {
         setProfile(response.data.data);
       }
@@ -41,9 +76,11 @@ const ProfileScreen = () => {
     }
   }, []);
 
-  useEffect(() => {
-    fetchProfile();
-  }, [fetchProfile]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchProfile();
+    }, [fetchProfile])
+  );
 
   const handleRefresh = () => {
     setIsRefreshing(true);
@@ -52,6 +89,28 @@ const ProfileScreen = () => {
 
   const handleLogout = () => {
     logout();
+  };
+
+  const handleFollow = async () => {
+    if (!profile) return;
+    
+    // Optimistic update
+    setProfile(prev => ({
+      ...prev,
+      isFollowing: !prev.isFollowing,
+      followersCount: prev.isFollowing ? prev.followersCount - 1 : prev.followersCount + 1
+    }));
+    
+    try {
+      await api.post(`/users/${profile.id}/follow`);
+    } catch (error) {
+      // Revert on failure
+      setProfile(prev => ({
+        ...prev,
+        isFollowing: !prev.isFollowing,
+        followersCount: prev.isFollowing ? prev.followersCount - 1 : prev.followersCount + 1
+      }));
+    }
   };
 
   const renderProfileHeader = () => (
@@ -86,12 +145,25 @@ const ProfileScreen = () => {
 
       {/* Action Buttons */}
       <View style={styles.actionRow}>
-        <TouchableOpacity style={styles.editButton}>
-          <Text style={styles.editButtonText}>Edit Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={20} color={COLORS.textPrimary} />
-        </TouchableOpacity>
+        {isOwnProfile ? (
+          <>
+            <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('EditProfile', { profile })}>
+              <Text style={styles.editButtonText}>Edit Profile</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+              <Ionicons name="log-out-outline" size={20} color={COLORS.textPrimary} />
+            </TouchableOpacity>
+          </>
+        ) : (
+          <TouchableOpacity 
+            style={[styles.editButton, profile?.isFollowing && styles.followingButton]} 
+            onPress={handleFollow}
+          >
+            <Text style={[styles.editButtonText, profile?.isFollowing && styles.followingButtonText]}>
+              {profile?.isFollowing ? 'Following' : 'Follow'}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Tab Selector */}
@@ -120,22 +192,7 @@ const ProfileScreen = () => {
     </View>
   );
 
-  const renderGridItem = ({ item }) => (
-    <TouchableOpacity style={styles.gridTile} activeOpacity={0.8}>
-      <Image source={{ uri: item.imageUrl }} style={styles.gridImage} resizeMode="cover" />
-      {/* Stats overlay */}
-      <View style={styles.gridOverlay}>
-        <View style={styles.gridStat}>
-          <Ionicons name="heart" size={12} color={COLORS.white} />
-          <Text style={styles.gridStatText}>{item.likesCount}</Text>
-        </View>
-        <View style={styles.gridStat}>
-          <Ionicons name="chatbubble" size={12} color={COLORS.white} />
-          <Text style={styles.gridStatText}>{item.commentsCount}</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
+  const renderGridItem = ({ item }) => <ProfileGridItem item={item} />;
 
   if (isLoading) {
     return (
@@ -149,10 +206,19 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerUsername}>{profile?.username || user?.username}</Text>
-        <TouchableOpacity>
-          <Ionicons name="menu-outline" size={26} color={COLORS.textPrimary} />
-        </TouchableOpacity>
+        {!isOwnProfile && (
+          <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginRight: SPACING.md }}>
+            <Ionicons name="arrow-back" size={26} color={COLORS.textPrimary} />
+          </TouchableOpacity>
+        )}
+        <Text style={[styles.headerUsername, !isOwnProfile && { flex: 1 }]}>
+          {profile?.username || user?.username}
+        </Text>
+        {isOwnProfile && (
+          <TouchableOpacity>
+            <Ionicons name="menu-outline" size={26} color={COLORS.textPrimary} />
+          </TouchableOpacity>
+        )}
       </View>
 
       <FlatList
@@ -274,6 +340,13 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZES.md,
     fontWeight: FONT_WEIGHTS.semibold,
     color: COLORS.textPrimary,
+  },
+  followingButton: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
+  },
+  followingButtonText: {
+    color: COLORS.white,
   },
   logoutButton: {
     width: 36,

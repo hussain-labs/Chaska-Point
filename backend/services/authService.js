@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const Database = require('../db/mockDatabase');
+const User = require('../models/User');
 
 /**
  * Auth Service - Business logic for authentication
@@ -11,12 +11,12 @@ const AuthService = {
    */
   register: async ({ username, email, password, fullName }) => {
     // Check if user already exists
-    const existingEmail = Database.findUserByEmail(email);
+    const existingEmail = await User.findOne({ email });
     if (existingEmail) {
       throw { status: 400, message: 'An account with this email already exists.' };
     }
 
-    const existingUsername = Database.findUserByUsername(username);
+    const existingUsername = await User.findOne({ username });
     if (existingUsername) {
       throw { status: 400, message: 'This username is already taken.' };
     }
@@ -26,7 +26,7 @@ const AuthService = {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create user
-    const user = Database.createUser({
+    const user = await User.create({
       username,
       email,
       password: hashedPassword,
@@ -36,19 +36,21 @@ const AuthService = {
     });
 
     // Generate token
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
 
-    const { password: _, ...userWithoutPassword } = user;
-    return { user: userWithoutPassword, token };
+    const userObj = user.toJSON();
+    delete userObj.password;
+    
+    return { user: userObj, token };
   },
 
   /**
    * Login an existing user
    */
   login: async ({ email, password }) => {
-    const user = Database.findUserByEmail(email);
+    const user = await User.findOne({ email });
     if (!user) {
       throw { status: 401, message: 'Invalid email or password.' };
     }
@@ -59,12 +61,14 @@ const AuthService = {
     }
 
     // Generate token
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
 
-    const { password: _, ...userWithoutPassword } = user;
-    return { user: userWithoutPassword, token };
+    const userObj = user.toJSON();
+    delete userObj.password;
+    
+    return { user: userObj, token };
   },
 };
 

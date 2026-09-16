@@ -33,6 +33,22 @@ const AuthStack = () => (
   </Stack.Navigator>
 );
 
+import EditProfileScreen from './src/screens/Profile/EditProfileScreen';
+
+/**
+ * Profile Stack - Profile & EditProfile
+ */
+const ProfileStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="ProfileMain" component={ProfileScreen} />
+    <Stack.Screen
+      name="EditProfile"
+      component={EditProfileScreen}
+      options={{ presentation: 'modal' }}
+    />
+  </Stack.Navigator>
+);
+
 /**
  * Main Tab Navigator - 5-way bottom navigation
  */
@@ -81,8 +97,20 @@ const MainTabs = () => (
     <Tab.Screen name="ExploreTab" component={ExploreScreen} />
     <Tab.Screen name="UploadTab" component={UploadScreen} />
     <Tab.Screen name="ActivityTab" component={ActivityScreen} />
-    <Tab.Screen name="ProfileTab" component={ProfileScreen} />
+    <Tab.Screen name="ProfileTab" component={ProfileStack} />
   </Tab.Navigator>
+);
+
+import ReelsScreen from './src/screens/Reels/ReelsScreen';
+
+/**
+ * Main Stack - Wraps Tabs and Full-Screen Modals (like Reels)
+ */
+const MainStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="MainTabs" component={MainTabs} />
+    <Stack.Screen name="Reels" component={ReelsScreen} />
+  </Stack.Navigator>
 );
 
 /**
@@ -101,7 +129,7 @@ const RootNavigator = () => {
 
   return (
     <NavigationContainer>
-      {isAuthenticated ? <MainTabs /> : <AuthStack />}
+      {isAuthenticated ? <MainStack /> : <AuthStack />}
     </NavigationContainer>
   );
 };

@@ -9,13 +9,30 @@ import {
   Alert,
   ActivityIndicator,
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
+  Platform,
 } from 'react-native';
+import { useVideoPlayer, VideoView } from 'expo-video';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, FONT_SIZES, FONT_WEIGHTS, BORDER_RADIUS } from '../../theme/theme';
 import api from '../../api/config';
+
+const VideoPreview = ({ uri }) => {
+  const player = useVideoPlayer(uri, (player) => {
+    player.loop = true;
+    player.muted = true;
+    player.play();
+  });
+
+  return (
+    <VideoView
+      player={player}
+      style={styles.imagePreview}
+      contentFit="cover"
+    />
+  );
+};
 
 const UploadScreen = ({ navigation }) => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -34,35 +51,54 @@ const UploadScreen = ({ navigation }) => {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All, // Support Images and Videos
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.8,
     });
 
     if (!result.canceled && result.assets[0]) {
-      setSelectedImage(result.assets[0].uri);
+      const asset = result.assets[0];
+      
+      // Check file size (approximate for local files if fileSize is not provided by Expo on some platforms)
+      // Usually fileSize is available in asset.fileSize in newer Expo versions
+      if (asset.fileSize && asset.fileSize > 50 * 1024 * 1024) {
+        Alert.alert('File too large', 'Please select a file smaller than 50MB.');
+        return;
+      }
+      
+      setSelectedImage(asset);
     }
   };
 
   const handleShare = async () => {
     if (!selectedImage) {
-      Alert.alert('No Image', 'Please select an image to share.');
+      Alert.alert('No Image', 'Please select an image or video to share.');
       return;
     }
 
     setIsUploading(true);
 
     try {
-      // In production, you'd upload the image to a cloud service first.
-      // For the mock backend, we pass a URL placeholder that simulates the upload.
-      const imageUrl = selectedImage.startsWith('http')
-        ? selectedImage
-        : `https://picsum.photos/seed/${Date.now()}/600/600`;
+      const formData = new FormData();
+      formData.append('caption', caption.trim());
 
-      const response = await api.post('/posts', {
-        imageUrl,
-        caption: caption.trim(),
+      const filename = selectedImage.uri.split('/').pop();
+      const match = /\.(\w+)$/.exec(filename);
+      const type = selectedImage.type === 'video' 
+        ? (match ? `video/${match[1]}` : 'video/mp4') 
+        : (match ? `image/${match[1]}` : 'image/jpeg');
+
+      formData.append('media', {
+        uri: selectedImage.uri,
+        name: filename,
+        type,
+      });
+
+      const response = await api.post('/posts', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
       if (response.data.success) {
@@ -113,7 +149,11 @@ const UploadScreen = ({ navigation }) => {
         {/* Image Selection Area */}
         {selectedImage ? (
           <View style={styles.imagePreviewContainer}>
-            <Image source={{ uri: selectedImage }} style={styles.imagePreview} resizeMode="cover" />
+            {selectedImage.type === 'video' ? (
+              <VideoPreview uri={selectedImage.uri} />
+            ) : (
+              <Image source={{ uri: selectedImage.uri }} style={styles.imagePreview} resizeMode="cover" />
+            )}
             <TouchableOpacity style={styles.removeButton} onPress={handleRemoveImage}>
               <Ionicons name="close-circle" size={28} color={COLORS.white} />
             </TouchableOpacity>

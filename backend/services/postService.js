@@ -1,4 +1,7 @@
-const Database = require('../db/mockDatabase');
+const mongoose = require('mongoose');
+const Post = require('../models/Post');
+const User = require('../models/User');
+const Activity = require('../models/Activity');
 
 /**
  * Post Service - Business logic for posts
@@ -7,17 +10,22 @@ const PostService = {
   /**
    * Get feed posts (all posts sorted by newest)
    */
-  getFeed: (userId) => {
-    const posts = Database.getAllPosts();
-    // Enrich posts with user data and like status
-    return posts.map((post) => {
-      const author = Database.findUserById(post.userId);
+  getFeed: async (userId) => {
+    const posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .populate('userId', 'username avatar fullName');
+      
+    return posts.map(post => {
+      const p = post.toJSON();
+      const user = p.userId;
+      delete p.userId;
+      
       return {
-        ...post,
-        user: author ? { id: author.id, username: author.username, avatar: author.avatar, fullName: author.fullName } : null,
-        isLiked: post.likes.includes(userId),
-        likesCount: post.likes.length,
-        commentsCount: post.comments.length,
+        ...p,
+        user: user ? { id: user.id, username: user.username, avatar: user.avatar, fullName: user.fullName } : null,
+        isLiked: p.likes.includes(userId),
+        likesCount: p.likes.length,
+        commentsCount: p.comments.length,
       };
     });
   },
@@ -25,14 +33,51 @@ const PostService = {
   /**
    * Get explore posts (randomized, excluding own)
    */
-  getExplore: (userId) => {
-    const posts = Database.getExplorePosts(userId);
-    return posts.map((post) => {
-      const author = Database.findUserById(post.userId);
+  getExplore: async (userId) => {
+    const posts = await Post.aggregate([
+      { $match: { userId: { $ne: new mongoose.Types.ObjectId(userId) } } },
+      { $sample: { size: 50 } },
+      { $sort: { createdAt: -1 } }
+    ]);
+    
+    await Post.populate(posts, { path: 'userId', select: 'username avatar' });
+    
+    return posts.map(post => {
+      // Aggregate returns raw objects, transform to match toJSON behavior
+      const user = post.userId;
+      const p = { ...post, id: post._id.toString() };
+      delete p._id;
+      delete p.__v;
+      delete p.userId;
+      
       return {
-        ...post,
-        user: author ? { id: author.id, username: author.username, avatar: author.avatar } : null,
-        likesCount: post.likes.length,
+        ...p,
+        user: user ? { id: user._id.toString(), username: user.username, avatar: user.avatar } : null,
+        likesCount: p.likes.length,
+        commentsCount: p.comments ? p.comments.length : 0,
+      };
+    });
+  },
+
+  /**
+   * Get Reels (only video posts)
+   */
+  getReels: async (userId) => {
+    const posts = await Post.find({ mediaType: 'video' })
+      .sort({ createdAt: -1 })
+      .populate('userId', 'username avatar fullName');
+      
+    return posts.map(post => {
+      const p = post.toJSON();
+      const user = p.userId;
+      delete p.userId;
+      
+      return {
+        ...p,
+        user: user ? { id: user.id, username: user.username, avatar: user.avatar, fullName: user.fullName } : null,
+        isLiked: p.likes.includes(userId),
+        likesCount: p.likes.length,
+        commentsCount: p.comments.length,
       };
     });
   },
@@ -40,21 +85,32 @@ const PostService = {
   /**
    * Create a new post
    */
-  create: (userId, { imageUrl, caption }) => {
-    if (!imageUrl) {
-      throw { status: 400, message: 'Image is required to create a post.' };
+  create: async (userId, { mediaFile, caption }) => {
+    if (!mediaFile) {
+      throw { status: 400, message: 'Media (image or video) is required to create a post.' };
     }
 
-    const post = Database.createPost({
+    const { uploadToGoogleDrive } = require('../utils/googleDrive');
+    const mediaUrl = await uploadToGoogleDrive(mediaFile);
+    
+    // Determine media type based on mimetype
+    const mediaType = mediaFile.mimetype.startsWith('video/') ? 'video' : 'image';
+
+    const newPost = await Post.create({
       userId,
-      imageUrl,
+      mediaUrl,
+      mediaType,
       caption: caption || '',
     });
 
-    const author = Database.findUserById(userId);
+    const post = await Post.findById(newPost._id).populate('userId', 'username avatar fullName');
+    const p = post.toJSON();
+    const user = p.userId;
+    delete p.userId;
+    
     return {
-      ...post,
-      user: author ? { id: author.id, username: author.username, avatar: author.avatar, fullName: author.fullName } : null,
+      ...p,
+      user: user ? { id: user.id, username: user.username, avatar: user.avatar, fullName: user.fullName } : null,
       isLiked: false,
       likesCount: 0,
       commentsCount: 0,
@@ -64,29 +120,64 @@ const PostService = {
   /**
    * Toggle like on a post
    */
-  toggleLike: (postId, userId) => {
-    const result = Database.toggleLike(postId, userId);
-    if (!result) {
+  toggleLike: async (postId, userId) => {
+    const post = await Post.findById(postId);
+    if (!post) {
       throw { status: 404, message: 'Post not found.' };
     }
-    return result;
+
+    const likeIndex = post.likes.indexOf(userId);
+    let liked = false;
+    
+    if (likeIndex === -1) {
+      post.likes.push(userId);
+      liked = true;
+      
+      // Create activity
+      if (post.userId.toString() !== userId) {
+        await Activity.create({
+          userId: post.userId,
+          type: 'like',
+          fromUserId: userId,
+          postId: post._id
+        });
+      }
+    } else {
+      post.likes.splice(likeIndex, 1);
+      liked = false;
+      
+      // Optional: remove activity if unliked
+      await Activity.deleteOne({
+        userId: post.userId,
+        type: 'like',
+        fromUserId: userId,
+        postId: post._id
+      });
+    }
+
+    await post.save();
+    return { liked, likesCount: post.likes.length };
   },
 
   /**
    * Get a single post by ID
    */
-  getById: (postId, userId) => {
-    const post = Database.getPostById(postId);
+  getById: async (postId, userId) => {
+    const post = await Post.findById(postId).populate('userId', 'username avatar fullName');
     if (!post) {
       throw { status: 404, message: 'Post not found.' };
     }
-    const author = Database.findUserById(post.userId);
+    
+    const p = post.toJSON();
+    const user = p.userId;
+    delete p.userId;
+    
     return {
-      ...post,
-      user: author ? { id: author.id, username: author.username, avatar: author.avatar, fullName: author.fullName } : null,
-      isLiked: post.likes.includes(userId),
-      likesCount: post.likes.length,
-      commentsCount: post.comments.length,
+      ...p,
+      user: user ? { id: user.id, username: user.username, avatar: user.avatar, fullName: user.fullName } : null,
+      isLiked: p.likes.includes(userId),
+      likesCount: p.likes.length,
+      commentsCount: p.comments.length,
     };
   },
 };

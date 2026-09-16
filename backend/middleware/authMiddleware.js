@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken');
-const Database = require('../db/mockDatabase');
+const User = require('../models/User');
 
 /**
  * Protect Middleware
  * Verifies JWT from Authorization header and attaches user to request.
  */
-const protect = (req, res, next) => {
+const protect = async (req, res, next) => {
   let token;
 
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -21,7 +21,7 @@ const protect = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = Database.findUserById(decoded.id);
+    const user = await User.findById(decoded.id).select('-password');
 
     if (!user) {
       return res.status(401).json({
@@ -31,8 +31,7 @@ const protect = (req, res, next) => {
     }
 
     // Attach user to request (exclude password)
-    const { password, ...userWithoutPassword } = user;
-    req.user = userWithoutPassword;
+    req.user = user.toJSON();
     next();
   } catch (error) {
     return res.status(401).json({

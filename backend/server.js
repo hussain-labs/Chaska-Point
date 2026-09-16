@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const connectDB = require('./db/connectDB');
+
 
 // Route imports
 const authRoutes = require('./routes/authRoutes');
@@ -58,13 +60,15 @@ app.use((err, req, res, next) => {
 });
 
 // --- Start Server ---
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  // Connect to database
+  await connectDB();
   console.log(`\n  Chaska Point API Server`);
   console.log(`  =======================`);
   console.log(`  Status:  Running`);
   console.log(`  Port:    ${PORT}`);
   console.log(`  URL:     http://localhost:${PORT}`);
-  console.log(`  Mode:    Development (Mock DB)\n`);
+  console.log(`  Mode:    Development (MongoDB)\n`);
 });
 
 module.exports = app;

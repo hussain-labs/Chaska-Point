@@ -8,9 +8,9 @@ const PostController = {
    * GET /posts
    * Get feed posts for the authenticated user
    */
-  getFeed: (req, res) => {
+  getFeed: async (req, res) => {
     try {
-      const posts = PostService.getFeed(req.user.id);
+      const posts = await PostService.getFeed(req.user.id);
 
       res.status(200).json({
         success: true,
@@ -29,9 +29,9 @@ const PostController = {
    * GET /posts/explore
    * Get explore/discover posts
    */
-  getExplore: (req, res) => {
+  getExplore: async (req, res) => {
     try {
-      const posts = PostService.getExplore(req.user.id);
+      const posts = await PostService.getExplore(req.user.id);
 
       res.status(200).json({
         success: true,
@@ -47,13 +47,36 @@ const PostController = {
   },
 
   /**
+   * GET /posts/reels
+   * Get all video posts
+   */
+  getReels: async (req, res) => {
+    try {
+      const posts = await PostService.getReels(req.user.id);
+
+      res.status(200).json({
+        success: true,
+        data: posts,
+        count: posts.length,
+      });
+    } catch (error) {
+      res.status(error.status || 500).json({
+        success: false,
+        message: error.message || 'Failed to fetch reels.',
+      });
+    }
+  },
+
+  /**
    * POST /posts
    * Create a new post
    */
-  create: (req, res) => {
+  create: async (req, res) => {
     try {
-      const { imageUrl, caption } = req.body;
-      const post = PostService.create(req.user.id, { imageUrl, caption });
+      const { caption } = req.body;
+      const mediaFile = req.file;
+      
+      const post = await PostService.create(req.user.id, { mediaFile, caption });
 
       res.status(201).json({
         success: true,
@@ -72,10 +95,10 @@ const PostController = {
    * PATCH /posts/:id/like
    * Toggle like on a post
    */
-  toggleLike: (req, res) => {
+  toggleLike: async (req, res) => {
     try {
       const { id } = req.params;
-      const result = PostService.toggleLike(id, req.user.id);
+      const result = await PostService.toggleLike(id, req.user.id);
 
       res.status(200).json({
         success: true,
@@ -93,10 +116,10 @@ const PostController = {
    * GET /posts/:id
    * Get a single post
    */
-  getById: (req, res) => {
+  getById: async (req, res) => {
     try {
       const { id } = req.params;
-      const post = PostService.getById(id, req.user.id);
+      const post = await PostService.getById(id, req.user.id);
 
       res.status(200).json({
         success: true,

@@ -6,7 +6,7 @@ import * as SecureStore from 'expo-secure-store';
  * Base axios instance with interceptors for auth token injection.
  */
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'http://192.168.1.3:5000';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

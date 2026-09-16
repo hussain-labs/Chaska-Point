@@ -10,6 +10,8 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useVideoPlayer, VideoView } from 'expo-video';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, FONT_SIZES, FONT_WEIGHTS } from '../../theme/theme';
 import { useAuth } from '../../context/AuthContext';
@@ -17,12 +19,136 @@ import api from '../../api/config';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
+const PostItem = ({ post, onDoubleTap, onLike, isActive, onVideoPress, onUserPress }) => {
+  const player = useVideoPlayer(
+    post.mediaType === 'video' ? post.mediaUrl : null,
+    (player) => {
+      player.loop = true;
+    }
+  );
+
+  useEffect(() => {
+    if (post.mediaType === 'video') {
+      if (isActive) {
+        player.play();
+      } else {
+        player.pause();
+      }
+    }
+  }, [isActive, post.mediaType]);
+
+  return (
+    <View style={styles.postContainer}>
+      {/* Post Header */}
+      <View style={styles.postHeader}>
+        <TouchableOpacity style={styles.postHeaderLeft} onPress={() => onUserPress(post.user?.id)}>
+          <Image source={{ uri: post.user?.avatar }} style={styles.avatar} />
+          <Text style={styles.username}>{post.user?.username}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Ionicons name="ellipsis-horizontal" size={20} color={COLORS.textPrimary} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Post Image with Double Tap / Video Press */}
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => {
+          if (post.mediaType === 'video') {
+            onVideoPress(post.id);
+          } else {
+            onDoubleTap(post.id, post.isLiked);
+          }
+        }}
+      >
+        {post.mediaType === 'video' ? (
+          <VideoView
+            player={player}
+            style={styles.postImage}
+            contentFit="cover"
+            allowsFullscreen
+            allowsPictureInPicture
+          />
+        ) : (
+          <Image
+            source={{ uri: post.mediaUrl }}
+            style={styles.postImage}
+            resizeMode="cover"
+          />
+        )}
+      </TouchableOpacity>
+
+      {/* Interaction Bar */}
+      <View style={styles.interactionBar}>
+        <View style={styles.interactionLeft}>
+          <TouchableOpacity onPress={() => onLike(post.id)} style={styles.iconButton}>
+            <Ionicons
+              name={post.isLiked ? 'heart' : 'heart-outline'}
+              size={26}
+              color={post.isLiked ? COLORS.like : COLORS.textPrimary}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton}>
+            <Ionicons name="chatbubble-outline" size={24} color={COLORS.textPrimary} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton}>
+            <Ionicons name="paper-plane-outline" size={24} color={COLORS.textPrimary} />
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity>
+          <Ionicons name="bookmark-outline" size={24} color={COLORS.textPrimary} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Likes Count */}
+      <View style={styles.captionSection}>
+        <Text style={styles.likesCount}>
+          {post.likesCount} {post.likesCount === 1 ? 'like' : 'likes'}
+        </Text>
+
+        {/* Caption */}
+        {post.caption ? (
+          <Text style={styles.captionText}>
+            <Text style={styles.captionUsername} onPress={() => onUserPress(post.user?.id)}>
+              {post.user?.username}{' '}
+            </Text>
+            {post.caption}
+          </Text>
+        ) : null}
+
+        {/* Comments preview */}
+        {post.commentsCount > 0 && (
+          <TouchableOpacity>
+            <Text style={styles.viewComments}>
+              View all {post.commentsCount} {post.commentsCount === 1 ? 'comment' : 'comments'}
+            </Text>
+          </TouchableOpacity>
+        )}
+
+        {/* Timestamp */}
+        <Text style={styles.timestamp}>{getTimeAgo(post.createdAt)}</Text>
+      </View>
+    </View>
+  );
+};
+
 const HomeScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [activePostId, setActivePostId] = useState(null);
   const { user } = useAuth();
   const lastTapRef = useRef({});
+
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    if (viewableItems && viewableItems.length > 0) {
+      setActivePostId(viewableItems[0].item.id);
+    }
+  }).current;
+
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 60,
+  }).current;
 
   const fetchFeed = useCallback(async () => {
     try {
@@ -38,9 +164,11 @@ const HomeScreen = ({ navigation }) => {
     }
   }, []);
 
-  useEffect(() => {
-    fetchFeed();
-  }, [fetchFeed]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchFeed();
+    }, [fetchFeed])
+  );
 
   const handleRefresh = () => {
     setIsRefreshing(true);
@@ -99,80 +227,23 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
+  const handleVideoPress = (postId) => {
+    navigation.navigate('Reels', { initialPostId: postId });
+  };
+
+  const handleUserPress = (userId) => {
+    navigation.navigate('ProfileTab', { screen: 'ProfileMain', params: { userId } });
+  };
+
   const renderPost = ({ item: post }) => (
-    <View style={styles.postContainer}>
-      {/* Post Header */}
-      <View style={styles.postHeader}>
-        <TouchableOpacity style={styles.postHeaderLeft}>
-          <Image source={{ uri: post.user?.avatar }} style={styles.avatar} />
-          <Text style={styles.username}>{post.user?.username}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Ionicons name="ellipsis-horizontal" size={20} color={COLORS.textPrimary} />
-        </TouchableOpacity>
-      </View>
-
-      {/* Post Image with Double Tap */}
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={() => handleDoubleTap(post.id, post.isLiked)}
-      >
-        <Image
-          source={{ uri: post.imageUrl }}
-          style={styles.postImage}
-          resizeMode="cover"
-        />
-      </TouchableOpacity>
-
-      {/* Interaction Bar */}
-      <View style={styles.interactionBar}>
-        <View style={styles.interactionLeft}>
-          <TouchableOpacity onPress={() => handleLike(post.id)} style={styles.iconButton}>
-            <Ionicons
-              name={post.isLiked ? 'heart' : 'heart-outline'}
-              size={26}
-              color={post.isLiked ? COLORS.like : COLORS.textPrimary}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="chatbubble-outline" size={24} color={COLORS.textPrimary} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="paper-plane-outline" size={24} color={COLORS.textPrimary} />
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity>
-          <Ionicons name="bookmark-outline" size={24} color={COLORS.textPrimary} />
-        </TouchableOpacity>
-      </View>
-
-      {/* Likes Count */}
-      <View style={styles.captionSection}>
-        <Text style={styles.likesCount}>
-          {post.likesCount} {post.likesCount === 1 ? 'like' : 'likes'}
-        </Text>
-
-        {/* Caption */}
-        {post.caption ? (
-          <Text style={styles.captionText}>
-            <Text style={styles.captionUsername}>{post.user?.username} </Text>
-            {post.caption}
-          </Text>
-        ) : null}
-
-        {/* Comments preview */}
-        {post.commentsCount > 0 && (
-          <TouchableOpacity>
-            <Text style={styles.viewComments}>
-              View all {post.commentsCount} {post.commentsCount === 1 ? 'comment' : 'comments'}
-            </Text>
-          </TouchableOpacity>
-        )}
-
-        {/* Timestamp */}
-        <Text style={styles.timestamp}>{getTimeAgo(post.createdAt)}</Text>
-      </View>
-    </View>
+    <PostItem 
+      post={post} 
+      onDoubleTap={handleDoubleTap} 
+      onLike={handleLike} 
+      isActive={post.id === activePostId}
+      onVideoPress={handleVideoPress}
+      onUserPress={handleUserPress}
+    />
   );
 
   if (isLoading) {
@@ -204,6 +275,8 @@ const HomeScreen = ({ navigation }) => {
         renderItem={renderPost}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
         refreshControl={
           <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} tintColor={COLORS.primary} />
         }
