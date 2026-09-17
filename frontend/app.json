@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": " ",
-    "slug": "chaska-point",
+    "name": "Vesper",
+    "slug": "vesper",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,7 +16,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.chaska-point"
+      "bundleIdentifier": "com.anonymous.vesper"
     },
     "android": {},
     "web": {
