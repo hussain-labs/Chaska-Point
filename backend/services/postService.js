@@ -11,6 +11,9 @@ const PostService = {
    * Get feed posts (all posts sorted by newest)
    */
   getFeed: async (userId) => {
+    const currentUser = await User.findById(userId).select('savedPosts');
+    const savedPostsSet = new Set((currentUser?.savedPosts || []).map(id => id.toString()));
+
     const posts = await Post.find()
       .sort({ createdAt: -1 })
       .populate('userId', 'username avatar fullName');
@@ -24,6 +27,7 @@ const PostService = {
         ...p,
         user: user ? { id: user.id, username: user.username, avatar: user.avatar, fullName: user.fullName } : null,
         isLiked: p.likes.includes(userId),
+        isSaved: savedPostsSet.has(p.id),
         likesCount: p.likes.length,
         commentsCount: p.comments.length,
       };
@@ -34,6 +38,9 @@ const PostService = {
    * Get explore posts (randomized, excluding own)
    */
   getExplore: async (userId) => {
+    const currentUser = await User.findById(userId).select('savedPosts');
+    const savedPostsSet = new Set((currentUser?.savedPosts || []).map(id => id.toString()));
+
     const posts = await Post.aggregate([
       { $match: { userId: { $ne: new mongoose.Types.ObjectId(userId) } } },
       { $sample: { size: 50 } },
@@ -53,6 +60,8 @@ const PostService = {
       return {
         ...p,
         user: user ? { id: user._id.toString(), username: user.username, avatar: user.avatar } : null,
+        isLiked: p.likes.some(id => id.toString() === userId),
+        isSaved: savedPostsSet.has(p.id),
         likesCount: p.likes.length,
         commentsCount: p.comments ? p.comments.length : 0,
       };
@@ -63,6 +72,9 @@ const PostService = {
    * Get Reels (only video posts)
    */
   getReels: async (userId) => {
+    const currentUser = await User.findById(userId).select('savedPosts');
+    const savedPostsSet = new Set((currentUser?.savedPosts || []).map(id => id.toString()));
+
     const posts = await Post.find({ mediaType: 'video' })
       .sort({ createdAt: -1 })
       .populate('userId', 'username avatar fullName');
@@ -76,6 +88,7 @@ const PostService = {
         ...p,
         user: user ? { id: user.id, username: user.username, avatar: user.avatar, fullName: user.fullName } : null,
         isLiked: p.likes.includes(userId),
+        isSaved: savedPostsSet.has(p.id),
         likesCount: p.likes.length,
         commentsCount: p.comments.length,
       };
@@ -160,9 +173,69 @@ const PostService = {
   },
 
   /**
+   * Toggle save on a post
+   */
+  toggleSave: async (postId, userId) => {
+    const post = await Post.findById(postId);
+    if (!post) {
+      throw { status: 404, message: 'Post not found.' };
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      throw { status: 404, message: 'User not found.' };
+    }
+
+    const savedIndex = user.savedPosts.indexOf(postId);
+    let saved = false;
+
+    if (savedIndex === -1) {
+      user.savedPosts.push(postId);
+      saved = true;
+    } else {
+      user.savedPosts.splice(savedIndex, 1);
+      saved = false;
+    }
+
+    await user.save();
+    return { isSaved: saved };
+  },
+
+  /**
+   * Delete a post
+   */
+  deletePost: async (postId, userId) => {
+    const post = await Post.findById(postId);
+    if (!post) {
+      throw { status: 404, message: 'Post not found.' };
+    }
+    
+    if (post.userId.toString() !== userId) {
+      throw { status: 403, message: 'You are not authorized to delete this post.' };
+    }
+
+    // Delete associated activities (likes, comments)
+    await Activity.deleteMany({ postId: post._id });
+
+    // Delete post
+    await Post.findByIdAndDelete(postId);
+    
+    // Also remove from all users' savedPosts
+    await User.updateMany(
+      { savedPosts: post._id },
+      { $pull: { savedPosts: post._id } }
+    );
+    
+    return { success: true };
+  },
+
+  /**
    * Get a single post by ID
    */
   getById: async (postId, userId) => {
+    const currentUser = await User.findById(userId).select('savedPosts');
+    const isSaved = currentUser?.savedPosts?.some(id => id.toString() === postId) || false;
+
     const post = await Post.findById(postId).populate('userId', 'username avatar fullName');
     if (!post) {
       throw { status: 404, message: 'Post not found.' };
@@ -176,6 +249,7 @@ const PostService = {
       ...p,
       user: user ? { id: user.id, username: user.username, avatar: user.avatar, fullName: user.fullName } : null,
       isLiked: p.likes.includes(userId),
+      isSaved,
       likesCount: p.likes.length,
       commentsCount: p.comments.length,
     };

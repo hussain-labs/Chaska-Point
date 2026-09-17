@@ -67,6 +67,22 @@ const UserController = {
   },
 
   /**
+   * GET /users/me/saved
+   * Get current user's saved posts
+   */
+  getSavedPosts: async (req, res) => {
+    try {
+      const posts = await UserService.getSavedPosts(req.user.id);
+      res.status(200).json({ success: true, data: posts, count: posts.length });
+    } catch (error) {
+      res.status(error.status || 500).json({
+        success: false,
+        message: error.message || 'Failed to fetch saved posts.',
+      });
+    }
+  },
+
+  /**
    * PUT /users/me
    * Update user profile
    */
@@ -131,6 +147,40 @@ const UserController = {
       res.status(error.status || 500).json({
         success: false,
         message: error.message || 'Failed to toggle follow.',
+      });
+    }
+  },
+
+  /**
+   * GET /users/:id/followers
+   * Get user's followers list
+   */
+  getFollowers: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const followers = await UserService.getFollowers(id, req.user.id);
+      res.status(200).json({ success: true, data: followers });
+    } catch (error) {
+      res.status(error.status || 500).json({
+        success: false,
+        message: error.message || 'Failed to fetch followers.',
+      });
+    }
+  },
+
+  /**
+   * GET /users/:id/following
+   * Get user's following list
+   */
+  getFollowing: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const following = await UserService.getFollowing(id, req.user.id);
+      res.status(200).json({ success: true, data: following });
+    } catch (error) {
+      res.status(error.status || 500).json({
+        success: false,
+        message: error.message || 'Failed to fetch following.',
       });
     }
   },

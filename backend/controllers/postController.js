@@ -132,6 +132,48 @@ const PostController = {
       });
     }
   },
+
+  /**
+   * POST /posts/:id/save
+   * Toggle save on a post
+   */
+  toggleSave: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const result = await PostService.toggleSave(id, req.user.id);
+
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } catch (error) {
+      res.status(error.status || 500).json({
+        success: false,
+        message: error.message || 'Failed to toggle save.',
+      });
+    }
+  },
+
+  /**
+   * DELETE /posts/:id
+   * Delete a post
+   */
+  delete: async (req, res) => {
+    try {
+      const { id } = req.params;
+      await PostService.deletePost(id, req.user.id);
+
+      res.status(200).json({
+        success: true,
+        message: 'Post deleted successfully.',
+      });
+    } catch (error) {
+      res.status(error.status || 500).json({
+        success: false,
+        message: error.message || 'Failed to delete post.',
+      });
+    }
+  },
 };
 
 module.exports = PostController;

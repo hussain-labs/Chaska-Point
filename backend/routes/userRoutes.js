@@ -13,6 +13,9 @@ router.get('/me', UserController.getMe);
 // GET /users/me/activity - Get current user's notifications
 router.get('/me/activity', UserController.getActivity);
 
+// GET /users/me/saved - Get current user's saved posts
+router.get('/me/saved', UserController.getSavedPosts);
+
 // GET /users/search - Search users
 router.get('/search', UserController.search);
 
@@ -21,6 +24,12 @@ router.get('/:id', UserController.getProfile);
 
 // POST /users/:id/follow - Toggle follow status
 router.post('/:id/follow', UserController.toggleFollow);
+
+// GET /users/:id/followers - Get user's followers
+router.get('/:id/followers', UserController.getFollowers);
+
+// GET /users/:id/following - Get user's following
+router.get('/:id/following', UserController.getFollowing);
 
 // PUT /users/me - Update profile
 const uploadMiddleware = require('../middleware/uploadMiddleware');

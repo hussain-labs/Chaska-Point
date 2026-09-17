@@ -26,4 +26,10 @@ router.post('/', uploadMiddleware.single('media'), PostController.create);
 // PATCH /posts/:id/like - Toggle like
 router.patch('/:id/like', PostController.toggleLike);
 
+// POST /posts/:id/save - Toggle save
+router.post('/:id/save', PostController.toggleSave);
+
+// DELETE /posts/:id - Delete post
+router.delete('/:id', PostController.delete);
+
 module.exports = router;

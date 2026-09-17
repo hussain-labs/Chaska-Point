@@ -9,6 +9,7 @@ import {
   Dimensions,
   ActivityIndicator,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useVideoPlayer, VideoView } from 'expo-video';
@@ -16,121 +17,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, FONT_SIZES, FONT_WEIGHTS } from '../../theme/theme';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../api/config';
+import PostItem from "../../components/PostItem";
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
-const PostItem = ({ post, onDoubleTap, onLike, isActive, onVideoPress, onUserPress }) => {
-  const player = useVideoPlayer(
-    post.mediaType === 'video' ? post.mediaUrl : null,
-    (player) => {
-      player.loop = true;
-    }
-  );
-
-  useEffect(() => {
-    if (post.mediaType === 'video') {
-      if (isActive) {
-        player.play();
-      } else {
-        player.pause();
-      }
-    }
-  }, [isActive, post.mediaType]);
-
-  return (
-    <View style={styles.postContainer}>
-      {/* Post Header */}
-      <View style={styles.postHeader}>
-        <TouchableOpacity style={styles.postHeaderLeft} onPress={() => onUserPress(post.user?.id)}>
-          <Image source={{ uri: post.user?.avatar }} style={styles.avatar} />
-          <Text style={styles.username}>{post.user?.username}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Ionicons name="ellipsis-horizontal" size={20} color={COLORS.textPrimary} />
-        </TouchableOpacity>
-      </View>
-
-      {/* Post Image with Double Tap / Video Press */}
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={() => {
-          if (post.mediaType === 'video') {
-            onVideoPress(post.id);
-          } else {
-            onDoubleTap(post.id, post.isLiked);
-          }
-        }}
-      >
-        {post.mediaType === 'video' ? (
-          <VideoView
-            player={player}
-            style={styles.postImage}
-            contentFit="cover"
-            allowsFullscreen
-            allowsPictureInPicture
-          />
-        ) : (
-          <Image
-            source={{ uri: post.mediaUrl }}
-            style={styles.postImage}
-            resizeMode="cover"
-          />
-        )}
-      </TouchableOpacity>
-
-      {/* Interaction Bar */}
-      <View style={styles.interactionBar}>
-        <View style={styles.interactionLeft}>
-          <TouchableOpacity onPress={() => onLike(post.id)} style={styles.iconButton}>
-            <Ionicons
-              name={post.isLiked ? 'heart' : 'heart-outline'}
-              size={26}
-              color={post.isLiked ? COLORS.like : COLORS.textPrimary}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="chatbubble-outline" size={24} color={COLORS.textPrimary} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="paper-plane-outline" size={24} color={COLORS.textPrimary} />
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity>
-          <Ionicons name="bookmark-outline" size={24} color={COLORS.textPrimary} />
-        </TouchableOpacity>
-      </View>
-
-      {/* Likes Count */}
-      <View style={styles.captionSection}>
-        <Text style={styles.likesCount}>
-          {post.likesCount} {post.likesCount === 1 ? 'like' : 'likes'}
-        </Text>
-
-        {/* Caption */}
-        {post.caption ? (
-          <Text style={styles.captionText}>
-            <Text style={styles.captionUsername} onPress={() => onUserPress(post.user?.id)}>
-              {post.user?.username}{' '}
-            </Text>
-            {post.caption}
-          </Text>
-        ) : null}
-
-        {/* Comments preview */}
-        {post.commentsCount > 0 && (
-          <TouchableOpacity>
-            <Text style={styles.viewComments}>
-              View all {post.commentsCount} {post.commentsCount === 1 ? 'comment' : 'comments'}
-            </Text>
-          </TouchableOpacity>
-        )}
-
-        {/* Timestamp */}
-        <Text style={styles.timestamp}>{getTimeAgo(post.createdAt)}</Text>
-      </View>
-    </View>
-  );
-};
 
 const HomeScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
@@ -207,6 +95,75 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
+  const handleSave = async (postId) => {
+    // Optimistic UI update
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId
+          ? { ...post, isSaved: !post.isSaved }
+          : post
+      )
+    );
+
+    try {
+      await api.post(`/posts/${postId}/save`);
+    } catch (error) {
+      // Revert on failure
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === postId
+            ? { ...post, isSaved: !post.isSaved }
+            : post
+        )
+      );
+    }
+  };
+
+  const confirmDeletePost = (postId) => {
+    Alert.alert(
+      "Delete Post",
+      "Are you sure you want to delete this post? This action cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Delete", 
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await api.delete(`/posts/${postId}`);
+              setPosts(prev => prev.filter(p => p.id !== postId));
+            } catch (error) {
+              Alert.alert("Error", "Failed to delete post.");
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  const handlePostOptions = (post) => {
+    if (post.user.id === user.id) {
+      Alert.alert(
+        "Post Options",
+        "What would you like to do?",
+        [
+          { text: "Cancel", style: "cancel" },
+          { 
+            text: "Edit Post", 
+            onPress: () => Alert.alert("Coming Soon", "Edit functionality is not implemented yet.")
+          },
+          { 
+            text: "Delete Post", 
+            style: "destructive",
+            onPress: () => confirmDeletePost(post.id)
+          }
+        ]
+      );
+    } else {
+      Alert.alert("Post Options", "No options available for this post.");
+    }
+  };
+
   /**
    * Double Tap to Like Logic
    * Tracks the last tap time per post and triggers like on second tap within 300ms.
@@ -243,6 +200,8 @@ const HomeScreen = ({ navigation }) => {
       isActive={post.id === activePostId}
       onVideoPress={handleVideoPress}
       onUserPress={handleUserPress}
+      onSave={handleSave}
+      onPostOptions={handlePostOptions}
     />
   );
 

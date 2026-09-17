@@ -34,6 +34,8 @@ const AuthStack = () => (
 );
 
 import EditProfileScreen from './src/screens/Profile/EditProfileScreen';
+import UsersListScreen from './src/screens/Profile/UsersListScreen';
+import SinglePostScreen from './src/screens/Profile/SinglePostScreen';
 
 /**
  * Profile Stack - Profile & EditProfile
@@ -46,6 +48,8 @@ const ProfileStack = () => (
       component={EditProfileScreen}
       options={{ presentation: 'modal' }}
     />
+    <Stack.Screen name="UsersList" component={UsersListScreen} />
+    <Stack.Screen name="SinglePost" component={SinglePostScreen} />
   </Stack.Navigator>
 );
 

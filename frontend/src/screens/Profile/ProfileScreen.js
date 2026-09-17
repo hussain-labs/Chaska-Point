@@ -22,7 +22,7 @@ const GRID_GAP = 1;
 const NUM_COLUMNS = 3;
 const TILE_SIZE = (SCREEN_WIDTH - GRID_GAP * (NUM_COLUMNS - 1)) / NUM_COLUMNS;
 
-const ProfileGridItem = ({ item }) => {
+const ProfileGridItem = ({ item, onPress }) => {
   const player = useVideoPlayer(
     item.mediaType === 'video' ? item.mediaUrl : null,
     (player) => {
@@ -31,7 +31,7 @@ const ProfileGridItem = ({ item }) => {
     }
   );
   return (
-    <TouchableOpacity style={styles.gridTile} activeOpacity={0.8}>
+    <TouchableOpacity style={styles.gridTile} activeOpacity={0.8} onPress={onPress}>
       {item.mediaType === 'video' ? (
         <VideoView player={player} style={styles.gridImage} contentFit="cover" />
       ) : (
@@ -53,6 +53,7 @@ const ProfileGridItem = ({ item }) => {
 
 const ProfileScreen = ({ route, navigation }) => {
   const [profile, setProfile] = useState(null);
+  const [savedPosts, setSavedPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState('grid');
@@ -67,6 +68,12 @@ const ProfileScreen = ({ route, navigation }) => {
       const response = await api.get(endpoint);
       if (response.data.success) {
         setProfile(response.data.data);
+      }
+      if (isOwnProfile) {
+        const savedResponse = await api.get('/users/me/saved');
+        if (savedResponse.data.success) {
+          setSavedPosts(savedResponse.data.data);
+        }
       }
     } catch (error) {
       console.log('Failed to fetch profile:', error.message);
@@ -126,14 +133,20 @@ const ProfileScreen = ({ route, navigation }) => {
             <Text style={styles.statNumber}>{profile?.postsCount || 0}</Text>
             <Text style={styles.statLabel}>Posts</Text>
           </View>
-          <View style={styles.statItem}>
+          <TouchableOpacity 
+            style={styles.statItem}
+            onPress={() => navigation.navigate('UsersList', { userId: targetUserId || user.id, type: 'followers' })}
+          >
             <Text style={styles.statNumber}>{profile?.followersCount || 0}</Text>
             <Text style={styles.statLabel}>Followers</Text>
-          </View>
-          <View style={styles.statItem}>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.statItem}
+            onPress={() => navigation.navigate('UsersList', { userId: targetUserId || user.id, type: 'following' })}
+          >
             <Text style={styles.statNumber}>{profile?.followingCount || 0}</Text>
             <Text style={styles.statLabel}>Following</Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -188,11 +201,28 @@ const ProfileScreen = ({ route, navigation }) => {
             color={activeTab === 'list' ? COLORS.textPrimary : COLORS.textSecondary}
           />
         </TouchableOpacity>
+        {isOwnProfile && (
+          <TouchableOpacity
+            style={[styles.tabItem, activeTab === 'saved' && styles.tabItemActive]}
+            onPress={() => setActiveTab('saved')}
+          >
+            <Ionicons
+              name="bookmark-outline"
+              size={24}
+              color={activeTab === 'saved' ? COLORS.textPrimary : COLORS.textSecondary}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
 
-  const renderGridItem = ({ item }) => <ProfileGridItem item={item} />;
+  const renderGridItem = ({ item }) => (
+    <ProfileGridItem 
+      item={item} 
+      onPress={() => navigation.navigate('SinglePost', { postId: item.id })} 
+    />
+  );
 
   if (isLoading) {
     return (
@@ -222,7 +252,7 @@ const ProfileScreen = ({ route, navigation }) => {
       </View>
 
       <FlatList
-        data={profile?.posts || []}
+        data={activeTab === 'saved' ? savedPosts : (profile?.posts || [])}
         renderItem={renderGridItem}
         keyExtractor={(item) => item.id}
         numColumns={NUM_COLUMNS}
@@ -235,8 +265,14 @@ const ProfileScreen = ({ route, navigation }) => {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Ionicons name="camera-outline" size={48} color={COLORS.textTertiary} />
-            <Text style={styles.emptyText}>No Posts Yet</Text>
-            <Text style={styles.emptySubtext}>Share photos to see them on your profile.</Text>
+            <Text style={styles.emptyText}>
+              {activeTab === 'saved' ? 'No Saved Posts' : 'No Posts Yet'}
+            </Text>
+            <Text style={styles.emptySubtext}>
+              {activeTab === 'saved' 
+                ? "Posts you save will appear here." 
+                : "Share photos to see them on your profile."}
+            </Text>
           </View>
         }
       />

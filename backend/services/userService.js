@@ -57,6 +57,69 @@ const UserService = {
   },
 
   /**
+   * Get current user's saved posts
+   */
+  getSavedPosts: async (userId) => {
+    const user = await User.findById(userId).populate({
+      path: 'savedPosts',
+      populate: { path: 'userId', select: 'username avatar fullName' },
+    });
+
+    if (!user) throw { status: 404, message: 'User not found.' };
+
+    return user.savedPosts.map(post => {
+      const p = post.toJSON();
+      const u = p.userId;
+      delete p.userId;
+      
+      return {
+        ...p,
+        user: u ? { id: u.id, username: u.username, avatar: u.avatar, fullName: u.fullName } : null,
+        isLiked: p.likes.includes(userId),
+        isSaved: true,
+        likesCount: p.likes.length,
+        commentsCount: p.comments.length,
+      };
+    }).reverse();
+  },
+
+  /**
+   * Get user's followers
+   */
+  getFollowers: async (userId, currentUserId) => {
+    const user = await User.findById(userId).populate('followers', 'username fullName avatar followers');
+    if (!user) {
+      throw { status: 404, message: 'User not found.' };
+    }
+
+    return user.followers.map(follower => {
+      const u = follower.toJSON();
+      return {
+        ...u,
+        isFollowing: follower.followers.includes(currentUserId)
+      };
+    });
+  },
+
+  /**
+   * Get user's following
+   */
+  getFollowing: async (userId, currentUserId) => {
+    const user = await User.findById(userId).populate('following', 'username fullName avatar followers');
+    if (!user) {
+      throw { status: 404, message: 'User not found.' };
+    }
+
+    return user.following.map(followingUser => {
+      const u = followingUser.toJSON();
+      return {
+        ...u,
+        isFollowing: followingUser.followers.includes(currentUserId)
+      };
+    });
+  },
+
+  /**
    * Update user profile
    */
   updateProfile: async (userId, { fullName, bio, avatarFile }) => {

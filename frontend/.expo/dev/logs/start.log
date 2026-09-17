@@ -1148,3 +1148,172 @@
 {"_e":"metro:bundling:progress","_t":1789659757466,"id":"3","progress":0,"total":1,"current":0}
 {"_e":"metro:bundling:done","_t":1789659757541,"id":"3","total":1,"ms":74.647833}
 {"_e":"metro:client_log","_t":1789659761782,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"root:init","_t":1789660177449,"format":"v0-jsonl","version":"57.0.24"}
+{"_e":"env:mode","_t":1789660177450,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1789660177451,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1789660177631,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1789660177839,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1789660177950,"plugins":[]}
+{"_e":"metro:instantiate","_t":1789660178242,"atlas":false,"workers":6,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1789660187411,"id":"1","platform":"android","environment":null,"entry":"node_modules/expo/AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1789660187411,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1789660187415,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1789660187766,"id":"1","progress":0.010000000000000002,"total":1,"current":1}
+{"_e":"metro:bundling:progress","_t":1789660187868,"id":"1","progress":0.04000000000000001,"total":6,"current":2}
+{"_e":"metro:bundling:progress","_t":1789660187980,"id":"1","progress":0.04000000000000001,"total":107,"current":5}
+{"_e":"metro:bundling:progress","_t":1789660188089,"id":"1","progress":0.04000000000000001,"total":115,"current":8}
+{"_e":"metro:bundling:progress","_t":1789660188190,"id":"1","progress":0.04000000000000001,"total":140,"current":19}
+{"_e":"metro:bundling:progress","_t":1789660188291,"id":"1","progress":0.04000000000000001,"total":160,"current":24}
+{"_e":"metro:bundling:progress","_t":1789660188393,"id":"1","progress":0.0445679012345679,"total":180,"current":38}
+{"_e":"metro:bundling:progress","_t":1789660188494,"id":"1","progress":0.10600324499729585,"total":215,"current":70}
+{"_e":"metro:bundling:progress","_t":1789660188594,"id":"1","progress":0.19868096869178536,"total":258,"current":115}
+{"_e":"metro:bundling:progress","_t":1789660188695,"id":"1","progress":0.19868096869178536,"total":333,"current":144}
+{"_e":"metro:bundling:progress","_t":1789660188796,"id":"1","progress":0.24711817969193756,"total":346,"current":172}
+{"_e":"metro:bundling:progress","_t":1789660188896,"id":"1","progress":0.2828779796232218,"total":408,"current":217}
+{"_e":"metro:bundling:progress","_t":1789660188996,"id":"1","progress":0.32068678197197326,"total":445,"current":252}
+{"_e":"metro:bundling:progress","_t":1789660189096,"id":"1","progress":0.32068678197197326,"total":511,"current":283}
+{"_e":"metro:bundling:progress","_t":1789660189197,"id":"1","progress":0.32068678197197326,"total":590,"current":323}
+{"_e":"metro:bundling:progress","_t":1789660189298,"id":"1","progress":0.34059046122351927,"total":622,"current":363}
+{"_e":"metro:bundling:progress","_t":1789660189398,"id":"1","progress":0.4168888337776675,"total":635,"current":410}
+{"_e":"metro:bundling:progress","_t":1789660189498,"id":"1","progress":0.49559872407693184,"total":652,"current":459}
+{"_e":"metro:bundling:progress","_t":1789660189598,"id":"1","progress":0.5602832533874865,"total":676,"current":506}
+{"_e":"metro:bundling:progress","_t":1789660189698,"id":"1","progress":0.6463794550619835,"total":704,"current":566}
+{"_e":"metro:bundling:progress","_t":1789660189798,"id":"1","progress":0.654320057015981,"total":764,"current":618}
+{"_e":"metro:bundling:progress","_t":1789660189899,"id":"1","progress":0.6769748437750361,"total":790,"current":650}
+{"_e":"metro:bundling:progress","_t":1789660190000,"id":"1","progress":0.6917370612730517,"total":820,"current":682}
+{"_e":"metro:bundling:progress","_t":1789660190100,"id":"1","progress":0.7216749929305306,"total":824,"current":700}
+{"_e":"metro:bundling:progress","_t":1789660190200,"id":"1","progress":0.7771814404432132,"total":836,"current":737}
+{"_e":"metro:bundling:progress","_t":1789660190300,"id":"1","progress":0.7771814404432132,"total":861,"current":758}
+{"_e":"metro:bundling:progress","_t":1789660190400,"id":"1","progress":0.7892238002085917,"total":878,"current":780}
+{"_e":"metro:bundling:progress","_t":1789660190501,"id":"1","progress":0.7985100932400108,"total":921,"current":823}
+{"_e":"metro:bundling:progress","_t":1789660190602,"id":"1","progress":0.7985100932400108,"total":987,"current":860}
+{"_e":"metro:bundling:progress","_t":1789660190701,"id":"1","progress":0.7985100932400108,"total":1010,"current":893}
+{"_e":"metro:bundling:progress","_t":1789660190802,"id":"1","progress":0.8179217132659132,"total":1025,"current":927}
+{"_e":"metro:bundling:progress","_t":1789660190902,"id":"1","progress":0.8207030458357707,"total":1063,"current":963}
+{"_e":"metro:bundling:progress","_t":1789660191002,"id":"1","progress":0.8471582221661126,"total":1068,"current":983}
+{"_e":"metro:bundling:progress","_t":1789660191102,"id":"1","progress":0.8831470460153868,"total":1079,"current":1014}
+{"_e":"metro:bundling:progress","_t":1789660191202,"id":"1","progress":0.9105214077741551,"total":1092,"current":1042}
+{"_e":"metro:bundling:progress","_t":1789660191305,"id":"1","progress":0.9453126750106406,"total":1118,"current":1087}
+{"_e":"metro:bundling:progress","_t":1789660191406,"id":"1","progress":0.9982166744519715,"total":1121,"current":1120}
+{"_e":"metro:bundling:progress","_t":1789660191917,"id":"1","progress":0.999,"total":1121,"current":1121}
+{"_e":"metro:bundling:progress","_t":1789660192018,"id":"1","progress":0.999,"total":1131,"current":1131}
+{"_e":"metro:bundling:done","_t":1789660192173,"id":"1","total":1131,"ms":4762.778959}
+{"_e":"metro:client_log","_t":1789660196332,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:bundling:started","_t":1789660265294,"id":"3","platform":"android","environment":null,"entry":"node_modules/expo/AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1789660265295,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1789660265376,"id":"3","total":1,"ms":81.337708}
+{"_e":"metro:client_log","_t":1789660270362,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:bundling:started","_t":1789660291436,"id":"5","platform":"android","environment":null,"entry":"node_modules/expo/AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1789660291436,"id":"5","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1789660291518,"id":"5","total":1,"ms":82.099417}
+{"_e":"metro:client_log","_t":1789660296602,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:client_log","_t":1789660304333,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
+{"_e":"metro:bundling:started","_t":1789660322846,"id":"8","platform":"android","environment":null,"entry":"node_modules/expo/AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1789660322847,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1789660322928,"id":"8","total":1,"ms":82.497042}
+{"_e":"metro:client_log","_t":1789660328122,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:client_log","_t":1789660374573,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
+{"_e":"metro:bundling:started","_t":1789660412745,"id":"b","platform":"android","environment":null,"entry":"node_modules/expo/AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1789660412745,"id":"b","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1789660412825,"id":"b","total":1,"ms":79.834208}
+{"_e":"metro:client_log","_t":1789660417873,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:client_log","_t":1789660449304,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
+{"_e":"metro:client_log","_t":1789660454103,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
+{"_e":"metro:client_log","_t":1789660473794,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
+{"_e":"metro:client_log","_t":1789660529016,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
+{"_e":"metro:client_log","_t":1789660644398,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
+{"_e":"metro:bundling:started","_t":1789660878623,"id":"i","platform":"android","environment":null,"entry":"node_modules/expo/AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1789660878625,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1789660878831,"id":"i","total":1,"ms":206.646958}
+{"_e":"metro:client_log","_t":1789660883404,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:client_log","_t":1789660955108,"level":"error","data":["Text strings must be rendered within a <Text> component."]}
+{"_e":"metro:bundling:started","_t":1789661148191,"id":"m","platform":"android","environment":null,"entry":"node_modules/expo/AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1789661148191,"id":"m","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1789661148291,"id":"m","total":1,"ms":99.845625}
+{"_e":"metro:client_log","_t":1789661153508,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:client_log","_t":1789661230949,"level":"error","data":["Text strings must be rendered within a <Text> component."]}
+{"_e":"metro:client_log","_t":1789661235627,"level":"error","data":["Text strings must be rendered within a <Text> component."]}
+{"_e":"metro:client_log","_t":1789661275139,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
+{"_e":"metro:client_log","_t":1789661279168,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
+{"_e":"metro:bundling:started","_t":1789661379771,"id":"u","platform":"android","environment":null,"entry":"node_modules/expo/AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1789661379772,"id":"u","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1789661379851,"id":"u","total":1,"ms":79.128834}
+{"_e":"metro:client_log","_t":1789661385548,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:client_log","_t":1789661389209,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
+{"_e":"metro:client_log","_t":1789661411689,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
+{"_e":"root:init","_t":1789662032900,"format":"v0-jsonl","version":"57.0.24"}
+{"_e":"env:mode","_t":1789662032901,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1789662032904,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1789662033177,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1789662033473,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1789662033659,"plugins":[]}
+{"_e":"metro:instantiate","_t":1789662034167,"atlas":false,"workers":6,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1789662036249,"id":"1","platform":"android","environment":null,"entry":"node_modules/expo/AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1789662036250,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1789662036254,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1789662036605,"id":"1","progress":0.010000000000000002,"total":1,"current":1}
+{"_e":"metro:bundling:progress","_t":1789662036710,"id":"1","progress":0.02366863905325444,"total":26,"current":4}
+{"_e":"metro:bundling:progress","_t":1789662036817,"id":"1","progress":0.0672153635116598,"total":27,"current":7}
+{"_e":"metro:bundling:progress","_t":1789662036949,"id":"1","progress":0.12755102040816327,"total":28,"current":10}
+{"_e":"metro:bundling:progress","_t":1789662037051,"id":"1","progress":0.2177777777777778,"total":30,"current":14}
+{"_e":"metro:bundling:progress","_t":1789662037155,"id":"1","progress":0.2177777777777778,"total":87,"current":25}
+{"_e":"metro:bundling:progress","_t":1789662037255,"id":"1","progress":0.2177777777777778,"total":108,"current":39}
+{"_e":"metro:bundling:progress","_t":1789662037355,"id":"1","progress":0.2177777777777778,"total":282,"current":77}
+{"_e":"metro:bundling:progress","_t":1789662037456,"id":"1","progress":0.2177777777777778,"total":348,"current":107}
+{"_e":"metro:bundling:progress","_t":1789662037558,"id":"1","progress":0.2177777777777778,"total":358,"current":117}
+{"_e":"metro:bundling:progress","_t":1789662037662,"id":"1","progress":0.2177777777777778,"total":381,"current":131}
+{"_e":"metro:bundling:progress","_t":1789662037763,"id":"1","progress":0.2177777777777778,"total":426,"current":167}
+{"_e":"metro:bundling:progress","_t":1789662037863,"id":"1","progress":0.2177777777777778,"total":456,"current":203}
+{"_e":"metro:bundling:progress","_t":1789662037963,"id":"1","progress":0.22760850694444446,"total":480,"current":229}
+{"_e":"metro:bundling:progress","_t":1789662038068,"id":"1","progress":0.3059744869489739,"total":508,"current":281}
+{"_e":"metro:bundling:progress","_t":1789662038169,"id":"1","progress":0.3821487603305785,"total":550,"current":340}
+{"_e":"metro:bundling:progress","_t":1789662038273,"id":"1","progress":0.42523550596709275,"total":595,"current":388}
+{"_e":"metro:bundling:progress","_t":1789662038374,"id":"1","progress":0.4721159170918872,"total":636,"current":437}
+{"_e":"metro:bundling:progress","_t":1789662038475,"id":"1","progress":0.4922441940042673,"total":687,"current":482}
+{"_e":"metro:bundling:progress","_t":1789662038574,"id":"1","progress":0.5209419514453323,"total":726,"current":524}
+{"_e":"metro:bundling:progress","_t":1789662038675,"id":"1","progress":0.5761358687763101,"total":747,"current":567}
+{"_e":"metro:bundling:progress","_t":1789662038776,"id":"1","progress":0.617494444166245,"total":761,"current":598}
+{"_e":"metro:bundling:progress","_t":1789662038876,"id":"1","progress":0.6641526952504414,"total":789,"current":643}
+{"_e":"metro:bundling:progress","_t":1789662038976,"id":"1","progress":0.7389966143428748,"total":798,"current":686}
+{"_e":"metro:bundling:progress","_t":1789662039076,"id":"1","progress":0.7389966143428748,"total":878,"current":730}
+{"_e":"metro:bundling:progress","_t":1789662039177,"id":"1","progress":0.7389966143428748,"total":908,"current":777}
+{"_e":"metro:bundling:progress","_t":1789662039279,"id":"1","progress":0.7724984660336012,"total":925,"current":813}
+{"_e":"metro:bundling:progress","_t":1789662039379,"id":"1","progress":0.7825443786982248,"total":962,"current":851}
+{"_e":"metro:bundling:progress","_t":1789662039479,"id":"1","progress":0.7825443786982248,"total":1001,"current":878}
+{"_e":"metro:bundling:progress","_t":1789662039582,"id":"1","progress":0.7835463774159469,"total":1019,"current":902}
+{"_e":"metro:bundling:progress","_t":1789662039683,"id":"1","progress":0.8036271578132627,"total":1043,"current":935}
+{"_e":"metro:bundling:progress","_t":1789662039782,"id":"1","progress":0.8304637759243131,"total":1071,"current":976}
+{"_e":"metro:bundling:progress","_t":1789662039890,"id":"1","progress":0.8353385060771324,"total":1081,"current":988}
+{"_e":"metro:bundling:progress","_t":1789662039993,"id":"1","progress":0.8638262729557138,"total":1091,"current":1014}
+{"_e":"metro:bundling:progress","_t":1789662040095,"id":"1","progress":0.9021533179711225,"total":1096,"current":1041}
+{"_e":"metro:bundling:progress","_t":1789662040195,"id":"1","progress":0.9340355036005815,"total":1103,"current":1066}
+{"_e":"metro:bundling:progress","_t":1789662040295,"id":"1","progress":0.9645418441441239,"total":1118,"current":1098}
+{"_e":"metro:bundling:progress","_t":1789662040395,"id":"1","progress":0.9964285742807835,"total":1119,"current":1117}
+{"_e":"metro:bundling:progress","_t":1789662040691,"id":"1","progress":0.9982134885210447,"total":1119,"current":1118}
+{"_e":"metro:bundling:progress","_t":1789662040792,"id":"1","progress":0.9982182631600688,"total":1122,"current":1121}
+{"_e":"metro:bundling:progress","_t":1789662040831,"id":"1","progress":0.999,"total":1122,"current":1122}
+{"_e":"metro:bundling:progress","_t":1789662040933,"id":"1","progress":0.999,"total":1132,"current":1132}
+{"_e":"metro:bundling:done","_t":1789662041127,"id":"1","total":1132,"ms":4878.37}
+{"_e":"metro:client_log","_t":1789662046279,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:bundling:started","_t":1789662580287,"id":"5","platform":"android","environment":null,"entry":"node_modules/expo/AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1789662580288,"id":"5","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1789662580366,"id":"5","total":1,"ms":77.992083}
+{"_e":"metro:client_log","_t":1789662584462,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:bundling:failed","_t":1789662592121,"id":null,"message":"SyntaxError: /Users/mc/Desktop/work /projects /Chaska Point /Chaska-Point/frontend/src/screens/Home/HomeScreen.js: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (23:6)\n\n  21 |         {/* Timestamp */}\n  22 |         <Text style={styles.timestamp}>{getTimeAgo(post.createdAt)}</Text>\n> 23 |       </View>\n     |       ^\n  24 |     </View>\n  25 |   );\n  26 | };","importStack":null,"filename":"src/screens/Home/HomeScreen.js","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:bundling:failed","_t":1789662617044,"id":null,"message":"SyntaxError: /Users/mc/Desktop/work /projects /Chaska Point /Chaska-Point/frontend/src/screens/Home/HomeScreen.js: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (23:6)\n\n  21 |         {/* Timestamp */}\n  22 |         <Text style={styles.timestamp}>{getTimeAgo(post.createdAt)}</Text>\n> 23 |       </View>\n     |       ^\n  24 |     </View>\n  25 |   );\n  26 | };","importStack":null,"filename":"src/screens/Home/HomeScreen.js","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:bundling:failed","_t":1789662625528,"id":null,"message":"SyntaxError: /Users/mc/Desktop/work /projects /Chaska Point /Chaska-Point/frontend/src/screens/Home/HomeScreen.js: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (23:6)\n\n  21 |         {/* Timestamp */}\n  22 |         <Text style={styles.timestamp}>{getTimeAgo(post.createdAt)}</Text>\n> 23 |       </View>\n     |       ^\n  24 |     </View>\n  25 |   );\n  26 | };","importStack":null,"filename":"src/screens/Home/HomeScreen.js","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:bundling:failed","_t":1789662636719,"id":null,"message":"SyntaxError: /Users/mc/Desktop/work /projects /Chaska Point /Chaska-Point/frontend/src/screens/Home/HomeScreen.js: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (23:6)\n\n  21 |         {/* Timestamp */}\n  22 |         <Text style={styles.timestamp}>{getTimeAgo(post.createdAt)}</Text>\n> 23 |       </View>\n     |       ^\n  24 |     </View>\n  25 |   );\n  26 | };","importStack":null,"filename":"src/screens/Home/HomeScreen.js","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:bundling:failed","_t":1789662650834,"id":null,"message":"SyntaxError: /Users/mc/Desktop/work /projects /Chaska Point /Chaska-Point/frontend/src/screens/Home/HomeScreen.js: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (23:6)\n\n  21 |         {/* Timestamp */}\n  22 |         <Text style={styles.timestamp}>{getTimeAgo(post.createdAt)}</Text>\n> 23 |       </View>\n     |       ^\n  24 |     </View>\n  25 |   );\n  26 | };","importStack":null,"filename":"src/screens/Home/HomeScreen.js","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:bundling:failed","_t":1789662661493,"id":null,"message":"SyntaxError: /Users/mc/Desktop/work /projects /Chaska Point /Chaska-Point/frontend/src/screens/Home/HomeScreen.js: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (23:6)\n\n  21 |         {/* Timestamp */}\n  22 |         <Text style={styles.timestamp}>{getTimeAgo(post.createdAt)}</Text>\n> 23 |       </View>\n     |       ^\n  24 |     </View>\n  25 |   );\n  26 | };","importStack":null,"filename":"src/screens/Home/HomeScreen.js","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:client_log","_t":1789662739272,"level":"error","data":["[ReferenceError: Property 'SCREEN_WIDTH' doesn't exist]"]}
+{"_e":"metro:client_log","_t":1789662872225,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
+{"_e":"metro:client_log","_t":1789662930092,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
+{"_e":"metro:client_log","_t":1789662948052,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
+{"_e":"metro:client_log","_t":1789662974922,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
+{"_e":"metro:client_log","_t":1789663006608,"level":"error","data":["Text strings must be rendered within a <Text> component."]}
+{"_e":"metro:client_log","_t":1789663008522,"level":"error","data":["Text strings must be rendered within a <Text> component."]}
+{"_e":"metro:client_log","_t":1789663141114,"level":"error","data":["Text strings must be rendered within a <Text> component."]}
+{"_e":"metro:client_log","_t":1789663163783,"level":"error","data":["Text strings must be rendered within a <Text> component."]}
+{"_e":"metro:client_log","_t":1789663178514,"level":"error","data":["Text strings must be rendered within a <Text> component."]}
+{"_e":"metro:client_log","_t":1789663182393,"level":"error","data":["Text strings must be rendered within a <Text> component."]}
+{"_e":"metro:client_log","_t":1789663192954,"level":"warn","data":["[expo-image-picker] `ImagePicker.MediaTypeOptions` have been deprecated. Use `ImagePicker.MediaType` or an array of `ImagePicker.MediaType` instead."]}
