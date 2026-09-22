@@ -86,8 +86,8 @@ const MainTabs = () => (
           case 'ActivityTab':
             iconName = focused ? 'heart' : 'heart-outline';
             break;
-          case 'ProfileTab':
-            iconName = focused ? 'person' : 'person-outline';
+          case 'AnonymousChatTab':
+            iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
             break;
           default:
             iconName = 'ellipse-outline';
@@ -101,11 +101,11 @@ const MainTabs = () => (
     <Tab.Screen name="ExploreTab" component={ExploreScreen} />
     <Tab.Screen name="UploadTab" component={UploadScreen} />
     <Tab.Screen name="ActivityTab" component={ActivityScreen} />
-    <Tab.Screen name="ProfileTab" component={ProfileStack} />
+    <Tab.Screen name="AnonymousChatTab" component={AnonymousChatScreen} />
   </Tab.Navigator>
 );
-
 import ReelsScreen from './src/screens/Reels/ReelsScreen';
+import AnonymousChatScreen from './src/screens/Chat/AnonymousChatScreen';
 
 /**
  * Main Stack - Wraps Tabs and Full-Screen Modals (like Reels)
@@ -114,6 +114,7 @@ const MainStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="MainTabs" component={MainTabs} />
     <Stack.Screen name="Reels" component={ReelsScreen} />
+    <Stack.Screen name="ProfileStack" component={ProfileStack} />
   </Stack.Navigator>
 );
 

@@ -218,7 +218,15 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Chaska Point</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity onPress={() => navigation.navigate('ProfileStack', { screen: 'ProfileMain', params: { userId: user?.id } })}>
+            <Image 
+              source={{ uri: user?.avatar || 'https://via.placeholder.com/150' }} 
+              style={{ width: 34, height: 34, borderRadius: 17, marginRight: SPACING.sm }} 
+            />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Vesper</Text>
+        </View>
         <View style={styles.headerRight}>
           <TouchableOpacity style={styles.headerIcon}>
             <Ionicons name="heart-outline" size={26} color={COLORS.textPrimary} />

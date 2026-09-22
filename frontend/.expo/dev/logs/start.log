@@ -1394,3 +1394,17 @@
 {"_e":"metro:bundling:progress","_t":1790085461340,"id":"6","progress":0,"total":1,"current":0}
 {"_e":"metro:bundling:done","_t":1790085461572,"id":"6","total":1,"ms":442.525458}
 {"_e":"metro:client_log","_t":1790085466088,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:bundling:started","_t":1790086297330,"id":"b","platform":"android","environment":null,"entry":"node_modules/expo/AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1790086297332,"id":"b","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1790086297500,"id":"b","total":1,"ms":168.290542}
+{"_e":"metro:client_log","_t":1790086301730,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:bundling:started","_t":1790086474182,"id":"d","platform":"android","environment":null,"entry":"node_modules/expo/AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1790086474183,"id":"d","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1790086474265,"id":"d","total":1,"ms":82.209333}
+{"_e":"metro:client_log","_t":1790086729954,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:bundling:started","_t":1790087272937,"id":"f","platform":"android","environment":null,"entry":"node_modules/expo/AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1790087272937,"id":"f","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1790087272941,"id":"f","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1790087273436,"id":"f","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1790087273600,"id":"f","total":1,"ms":663.175083}
+{"_e":"metro:client_log","_t":1790087278651,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
