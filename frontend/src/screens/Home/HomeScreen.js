@@ -19,6 +19,7 @@ import { useAuth } from '../../context/AuthContext';
 import api from '../../api/config';
 import PostItem from "../../components/PostItem";
 
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const HomeScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
